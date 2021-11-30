@@ -1,5 +1,11 @@
-To run:
+For now, run it by confirming all the tests work.
 
 ```bash
-npx tsc && ./build/cli.js aoc 01 2020
+npm run test
+```
+
+or
+
+```bash
+npm run test:watch
 ```
