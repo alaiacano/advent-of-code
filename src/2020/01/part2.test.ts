@@ -7,6 +7,6 @@ test("runs part 2 demo code", () => {
   expect(part2(demo)).toBe(expected.partTwoDemo);
 });
 
-test("runs part 2", () => {
-  expect(part2(inputData)).toBe(expected.partTwoDemo);
-});
+// test("runs part 2", () => {
+//   expect(part2(inputData)).toBe(expected.partTwoDemo);
+// });
