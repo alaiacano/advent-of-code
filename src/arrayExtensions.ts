@@ -3,6 +3,11 @@ declare global {
   interface Array<T> {
     sliding(windowSize: number): Array<T[]>;
     slidingApply<U>(windowSize: number, fn: (slice: T[]) => U): Array<U>;
+    windowFoldLeft<U>(
+      windowSize: number,
+      zero: U,
+      fn: (acc: U, slice: T[]) => U
+    ): U;
   }
 }
 
@@ -23,4 +28,16 @@ Array.prototype.slidingApply = function <T, U>(
     slices.push(fn(this.slice(i - windowSize, i)));
   }
   return slices;
+};
+
+Array.prototype.windowFoldLeft = function <T, U>(
+  windowSize: number,
+  accumulator: U,
+  fn: (acc: U, slice: T[]) => U
+): U {
+  for (let i = windowSize; i <= this.length; i++) {
+    const newSlice = this.slice(i - windowSize, i);
+    accumulator = fn(accumulator, newSlice);
+  }
+  return accumulator;
 };
