@@ -51,7 +51,7 @@ export const part2WindowFold = (input: number[]): PartAnswer => {
     return 0;
   }
   const sum = (a: number, b: number) => a + b;
-  const sums = input.windowFoldLeft(
+  const increments = input.windowFoldLeft(
     3,
     { increments: 0, prev: 0 },
     (acc, slice) => {
@@ -65,5 +65,33 @@ export const part2WindowFold = (input: number[]): PartAnswer => {
   );
   // need to subtract 1 because the first window will
   // always be higher than the initial accumulator value of zero.
-  return sums.increments - 1;
+  return increments.increments - 1;
+};
+
+/**
+ * Take 4: I was made aware that you don't need to sum each window because two of the items overlap
+ * between each window. So taking the difference of the items on either side of them (items `i` and `i-3`)
+ * is sufficient.
+ *
+ * This optimization can be applied to all of the solutions.
+ */
+export const part2WindowFoldNoSum = (input: number[]): PartAnswer => {
+  if (input.length < 4) {
+    return 0;
+  }
+  const increments = input.windowFoldLeft(
+    3,
+    { increments: 0, prev: 0 },
+    (acc, slice) => {
+      const { increments, prev } = acc;
+      const newVal = slice[2];
+      return {
+        increments: newVal > prev ? increments + 1 : increments,
+        prev: slice[0],
+      };
+    }
+  );
+  // need to subtract 1 because the first window will
+  // always be higher than the initial accumulator value of zero.
+  return increments.increments - 1;
 };
