@@ -1,28 +1,32 @@
 import { PartAnswer } from "../../types";
 import "../../arrayExtensions";
 import * as _ from "lodash";
-import { part1 } from "./part1";
+import { part1, solution } from "./part1";
 
 /**
- * A pretty straight-forward approach to loop through the index and check if the previous 3 are higher
- * than the lagged 3.
+ * Probably the most efficient answer. Instead of a gap of 1, we now have a gap of 3.
+ * 199  A
+ * 200  A B
+ * 208  A B C
+ * 210    B C D    <- at this point, the B window and A window overlap on index 1 and 2.
+ * 200  E   C D       we need to make sure that index 3 is greater than index 0.
+ * 207  E F   D
+ * 240  E F G
+ * 269    F G H
+ * 260      G H
+ * 263        H
  */
 export const part2 = (input: number[]): PartAnswer => {
   if (input.length < 4) {
     return 0;
   }
 
-  let totalIncreases = 0;
-
-  for (let i = 3; i <= input.length; i++) {
-    const prevWindow = input[i - 3] + input[i - 2] + input[i - 1];
-    const currWindow = input[i - 2] + input[i - 1] + input[i];
-    if (currWindow > prevWindow) {
-      totalIncreases += 1;
-    }
-  }
-  return totalIncreases;
+  return solution(input, 3);
 };
+
+/////////////////////////////////////////////
+// The following are for fun/learning.
+/////////////////////////////////////////////
 
 /**
  * I made `Array.prototype.slidingApply` to break the array into length-3 sub-arrays
@@ -36,36 +40,7 @@ export const part2Sliding = (input: number[]): PartAnswer => {
   }
   const sum = (a: number, b: number) => a + b;
   const sums = input.slidingApply(3, (s) => s.reduce(sum));
-  return part1(sums);
-};
-
-/**
- * OK, now I made a `Array.prototype.windowFoldLeft` function that works like a normal
- * foldLeft, which has the signature `foldLeft<A, B>(z: B, fn((b: B, a: A) => B)): B` and instead
- * returns `A[]`, which in this case is the next 3-element sub-array.
- *
- * The accumulator `B` needs to hold both the previous sum and the number of times we've incremented.
- */
-export const part2WindowFold = (input: number[]): PartAnswer => {
-  if (input.length < 4) {
-    return 0;
-  }
-  const sum = (a: number, b: number) => a + b;
-  const increments = input.windowFoldLeft(
-    3,
-    { increments: 0, prev: 0 },
-    (acc, slice) => {
-      const { increments, prev } = acc;
-      const newSum = slice.reduce(sum);
-      return {
-        increments: newSum > prev ? increments + 1 : increments,
-        prev: newSum,
-      };
-    }
-  );
-  // need to subtract 1 because the first window will
-  // always be higher than the initial accumulator value of zero.
-  return increments.increments - 1;
+  return solution(sums, 1);
 };
 
 /**
