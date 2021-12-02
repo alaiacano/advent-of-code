@@ -6,7 +6,6 @@ let Benchmark = require("benchmark");
 
 const suite = new Benchmark.Suite();
 
-// add tests
 suite
   .add("part1", function () {
     part1(inputData);
@@ -25,8 +24,5 @@ suite
   .on("cycle", function (event: any) {
     console.log(String(event.target));
   })
-  // .on("complete", function () {
-  //   console.log("Fastest is " + this.filter("fastest").map("name"));
-  // })
   // run async
   .run({ async: true });
