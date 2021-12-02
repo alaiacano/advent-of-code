@@ -19,10 +19,6 @@ test("runs part 2 using the sliding apply", () => {
   expect(part2Sliding(inputData)).toBe(expected.partTwo);
 });
 
-test("runs part 2 using the window foldLeft", () => {
-  expect(part2WindowFold(inputData)).toBe(expected.partTwo);
-});
-
 test("runs part 2 using the window foldLeft without summing!", () => {
   expect(part2WindowFoldNoSum(inputData)).toBe(expected.partTwo);
 });
