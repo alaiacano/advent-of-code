@@ -1,7 +1,7 @@
 import { PartAnswer } from "../../types";
 import "../../arrayExtensions";
 import * as _ from "lodash";
-import { part1, solution } from "./part1";
+import { solution } from "./part1";
 
 /**
  * Probably the most efficient answer. Instead of a gap of 1, we now have a gap of 3.
