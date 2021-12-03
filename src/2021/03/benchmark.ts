@@ -1,4 +1,10 @@
-import { inputData, part1, part2, part2Sliding, part2WindowFoldNoSum } from ".";
+import { inputData } from ".";
+import { part1, part2 } from ".";
+
+/*
+part1 x 9,128 ops/sec ±2.09% (82 runs sampled)
+part2 x 1,704 ops/sec ±1.26% (86 runs sampled)
+*/
 
 let Benchmark = require("benchmark");
 
@@ -11,13 +17,6 @@ suite
   .add("part2", function () {
     part2(inputData);
   })
-  .add("part2Sliding", function () {
-    part2Sliding(inputData);
-  })
-  .add("part2WindowFoldNoSum", function () {
-    part2WindowFoldNoSum(inputData);
-  })
-
   // add listeners
   .on("cycle", function (event: any) {
     console.log(String(event.target));

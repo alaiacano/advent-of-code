@@ -1,5 +1,5 @@
 import { DayAnswer } from "../../types";
-import { lineParser, part1, part2, Step, inputData } from "./day2";
+import { lineParser, part1, part2, Step, inputData } from ".";
 
 const expected: DayAnswer = {
   partOneDemo: 150,

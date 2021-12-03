@@ -1,5 +1,4 @@
-import { inputData } from "./day2";
-import { part1, part2 } from "./day2";
+import { part1, part2, inputData } from ".";
 
 let Benchmark = require("benchmark");
 
@@ -12,13 +11,6 @@ suite
   .add("part2", function () {
     part2(inputData);
   })
-  // .add("part2Sliding", function () {
-  //   part2Sliding(inputData);
-  // })
-  // .add("part2WindowFoldNoSum", function () {
-  //   part2WindowFoldNoSum(inputData);
-  // })
-
   // add listeners
   .on("cycle", function (event: any) {
     console.log(String(event.target));
