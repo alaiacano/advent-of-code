@@ -9,7 +9,23 @@ declare global {
       fn: (acc: U, slice: T[]) => U
     ): U;
   }
+
+  interface Set<T> {
+    intersection(s2: Set<T>): Set<T>;
+  }
 }
+
+Set.prototype.intersection = function <T>(s2: Set<T>) {
+  let shorter: Set<T>, longer: Set<T>;
+  if (this.size < s2.size) {
+    shorter = this;
+    longer = s2;
+  } else {
+    shorter = s2;
+    longer = this;
+  }
+  return new Set([...shorter].filter((x) => longer.has(x)));
+};
 
 Array.prototype.sliding = function <T>(windowSize: number) {
   let slices: T[][] = [];
