@@ -41,7 +41,8 @@ export const inputData: BingoInput = boardParser(
     .trimEnd()
 );
 
+export type Board = Set<number>[];
 export type BingoInput = {
   draws: number[];
-  boards: Set<number>[][];
+  boards: Board[];
 };

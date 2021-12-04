@@ -1,12 +1,12 @@
 import { DayAnswer } from "../../types";
 import { boardParser, inputData } from "./parser";
-import { part1 } from ".";
+import { part1, part2 } from ".";
 
 const expected: DayAnswer = {
   partOneDemo: 4512,
   partOne: 4662,
-  partTwoDemo: -1,
-  partTwo: -1,
+  partTwoDemo: 1924,
+  partTwo: 25111,
 };
 
 const demoInputString: string = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -37,4 +37,12 @@ test("Runs part 1 Demo", () => {
 
 test("Runs part 1", () => {
   expect(part1(inputData)).toBe(expected.partOne);
+});
+
+test("Runs part 2 Demo", () => {
+  expect(part2(demoInput)).toBe(expected.partTwoDemo);
+});
+
+test("Runs part 2", () => {
+  expect(part2(inputData)).toBe(expected.partTwo);
 });
