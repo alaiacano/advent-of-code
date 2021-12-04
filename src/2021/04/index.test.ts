@@ -6,7 +6,7 @@ const expected: DayAnswer = {
   partOneDemo: 4512,
   partOne: 4662,
   partTwoDemo: 1924,
-  partTwo: 25111,
+  partTwo: 12080,
 };
 
 const demoInputString: string = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
