@@ -3,6 +3,7 @@ declare global {
   interface Array<T> {
     sliding(windowSize: number): Array<T[]>;
     slidingApply<U>(windowSize: number, fn: (slice: T[]) => U): Array<U>;
+    foldLeft<U>(fn: (acc: U, newValue: T) => U, zero: U): U;
     windowFoldLeft<U>(
       windowSize: number,
       zero: U,
@@ -46,6 +47,24 @@ Array.prototype.slidingApply = function <T, U>(
   return slices;
 };
 
+Array.prototype.foldLeft = function <T, U>(
+  fn: (acc: U, newValue: T) => U,
+  zero: U
+): U {
+  // Prototype methods can't be called recursively, so we put the fold inside here.
+  const foldLeft =
+    <A, B>(xs: Array<A>, zero: B) =>
+    (f: (b: B, a: A) => B): B => {
+      const len = xs.length;
+      if (len === 0) return zero;
+      else {
+        const head = xs[0];
+        const tails = xs.slice(1);
+        return foldLeft(tails, f(zero, head))(f);
+      }
+    };
+  return foldLeft(this, zero)(fn);
+};
 Array.prototype.windowFoldLeft = function <T, U>(
   windowSize: number,
   accumulator: U,

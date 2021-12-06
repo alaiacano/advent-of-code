@@ -9,9 +9,6 @@
     "clean": "rm -rf build/*",
     "build": "tsc"
   },
-  "jest": {
-    "verbose": true
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
