@@ -41,12 +41,28 @@ export const part1 = (lines: Line[], skipDiagonal: boolean): number => {
       }
     };
 
-    for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-      for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-        observe(x, y);
-      }
-    }
+    // Make arrays of x's and y's so that we can zip them together.
+    // if x is different between point 1 and 2, we get the range
+    // If x or y is the same for each point, we need to duplicate it range.length times.
+    const xs =
+      x1 === x2
+        ? Array.from({ length: Math.abs(y2 - y1) + 1 }, (key) => x1)
+        : range(x1, x2);
+    const ys =
+      y1 === y2
+        ? Array.from({ length: Math.abs(x2 - x1) + 1 }, (key) => y1)
+        : range(y1, y2);
+
+    _.zip(xs, ys).forEach((xy) => observe(xy[0] as number, xy[1] as number));
   }
 
   return visitedTwice.size;
+};
+
+// Yet another thing I would have expected to have in typescript!
+export const range = (start: number, end: number) => {
+  return Array.from(
+    { length: Math.abs(end - start) + 1 },
+    (v: number, key: number) => (end > start ? key + start : start - key)
+  );
 };

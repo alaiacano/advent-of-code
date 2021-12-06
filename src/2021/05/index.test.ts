@@ -1,11 +1,11 @@
-import { part1, inputData, lineParser } from ".";
+import { part1, inputData, lineParser, range } from ".";
 import { DayAnswer } from "../../types";
 
 const expected: DayAnswer = {
   partOneDemo: 5,
   partOne: 5124,
   partTwoDemo: 12,
-  partTwo: 0,
+  partTwo: 19771,
 };
 
 const demoInput = `0,9 -> 5,9
@@ -27,6 +27,15 @@ test("Runs part 1", () => {
   expect(part1(inputData, true)).toBe(expected.partOne);
 });
 
-// test("Runs part 2 Demo", () => {
-//   expect(part1(demoInput.map(lineParser), false)).toBe(expected.partTwoDemo);
-// });
+test("range works right", () => {
+  expect(range(1, 3)).toStrictEqual([1, 2, 3]);
+  expect(range(3, 1)).toStrictEqual([3, 2, 1]);
+});
+
+test("Runs part 2 Demo", () => {
+  expect(part1(demoInput.map(lineParser), false)).toBe(expected.partTwoDemo);
+});
+
+test("Runs part 2 Demo", () => {
+  expect(part1(inputData, false)).toBe(expected.partTwo);
+});
