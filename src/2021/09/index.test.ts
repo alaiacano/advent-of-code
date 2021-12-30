@@ -10,6 +10,10 @@ const inputData = lineReader(
   "/Users/adam/github/alaiacano/advent-of-code/inputs/2021/day9.txt",
   (line) => line
 );
-const input = test("part 1 demo", () => {
+test("part 1 demo", () => {
   expect(part1(demoInput)).toBe(15);
+});
+
+test("part 1", () => {
+  expect(part1(inputData)).toBe(468);
 });
