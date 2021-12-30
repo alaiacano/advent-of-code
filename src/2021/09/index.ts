@@ -1,15 +1,10 @@
 import _ from "lodash";
-import internal from "stream";
+import "../../arrayExtensions";
 
-export const part1 = (input: string[]): number => {
-  const cells: number[][] = input.map((row) =>
-    row.split("").map((cell) => parseInt(cell, 10))
-  );
-
-  const nCol = input[0].length;
-  const nRow = input.length;
-  let riskLevel = 0;
-
+function findLowPoints(cells: number[][]): number[][] {
+  const nRow = cells.length;
+  const nCol = cells[0].length;
+  let lowPoints = [];
   const testLeft = (col: number, row: number, cellVal: number): boolean =>
     col === 0 || cells[row][col - 1] > cellVal;
   const testRight = (col: number, row: number, cellVal: number): boolean =>
@@ -31,10 +26,20 @@ export const part1 = (input: string[]): number => {
         testUp(col, row, currentValue) &&
         testDown(col, row, currentValue)
       ) {
-        riskLevel += 1 + cells[row][col];
+        lowPoints.push([row, col]);
       }
     }
   }
+  return lowPoints;
+}
 
-  return riskLevel;
+export const part1 = (input: string[]): number => {
+  const cells: number[][] = input.map((row) =>
+    row.split("").map((cell) => parseInt(cell, 10))
+  );
+
+  return findLowPoints(cells).foldLeft((acc: number, cell: number[]) => {
+    const [row, col] = cell;
+    return acc + 1 + cells[row][col];
+  }, 0);
 };
