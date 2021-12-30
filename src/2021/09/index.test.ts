@@ -1,4 +1,4 @@
-import { part1 } from ".";
+import { part1, part2 } from ".";
 import { lineReader } from "../../types";
 const demoInput = `2199943210
 3987894921
@@ -16,4 +16,8 @@ test("part 1 demo", () => {
 
 test("part 1", () => {
   expect(part1(inputData)).toBe(468);
+});
+
+test("part 2", () => {
+  expect(part2(demoInput)).toBe(1134);
 });
