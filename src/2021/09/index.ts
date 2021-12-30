@@ -1,5 +1,7 @@
 import "../../arrayExtensions";
 import _ from "lodash";
+import * as Collections from "typescript-collections";
+
 enum Direction {
   UP,
   DOWN,
@@ -12,7 +14,7 @@ type Cell = {
   value: number;
 };
 type Basin = {
-  cells: Set<Cell>;
+  cells: Collections.Set<Cell>;
 };
 
 function findLowPoints(cells: number[][]): Cell[] {
@@ -76,93 +78,90 @@ export const part2 = (input: string[]): number => {
 
   const lowPoints = findLowPoints(cells);
 
-  // TODO: This is a depth-first that apparently never finishes. Need to do breadth-first
+  function findBasin(
+    cellsToCheck: Collections.Set<Cell>,
+    seenSoFar: Collections.Set<Cell>
+  ): Collections.Set<Cell> {
+    // Exit condition: no more cells to check. Return everything we've seen.
+    if (cellsToCheck.size() === 0) {
+      return seenSoFar;
+    }
 
-  // find the basins by starting at the low points and recursing up/out.
-  let recursions = 0;
-  const findBasin = (
-    testCell: Cell,
-    contents: Set<Cell>,
-    skipDirection: Set<Direction>
-  ): Set<Cell> => {
-    recursions += 1;
-    if (recursions > 5) {
-      throw "done";
-    }
-    console.log(`Checking cell ${JSON.stringify(testCell)}`);
-    if (testCell.value == 9 || contents.has(testCell)) {
-      console.log(`exiting for cell ${JSON.stringify(testCell)}`);
-      return new Set();
-    }
-    contents.add(testCell);
-    // Search left/right
-    if (!skipDirection.has(Direction.LEFT) && testCell.col > 0) {
-      console.log("MOVING LEFT");
-      findBasin(
-        {
+    const nextCellsToCheck: Collections.Set<Cell> = new Collections.Set(
+      (item) => JSON.stringify(item)
+    );
+    cellsToCheck.forEach((testCell) => {
+      if (testCell.col > 0) {
+        const leftCell = {
           col: testCell.col - 1,
           row: testCell.row,
           value: cells[testCell.row][testCell.col - 1],
-        },
-        contents,
-        new Set([Direction.RIGHT])
-      ).forEach((v) => contents.add(v));
-    }
-    if (!skipDirection.has(Direction.RIGHT) && testCell.col < nCol - 1) {
-      console.log("MOVING RIGHT");
-      findBasin(
-        {
+        };
+        if (!seenSoFar.contains(leftCell) && leftCell.value < 9) {
+          seenSoFar.add(leftCell);
+          nextCellsToCheck.add(leftCell);
+        }
+      }
+
+      if (testCell.col < nCol - 1) {
+        const rightCell = {
           col: testCell.col + 1,
           row: testCell.row,
           value: cells[testCell.row][testCell.col + 1],
-        },
-        contents,
-        new Set([Direction.LEFT])
-      ).forEach((v) => contents.add(v));
-    }
+        };
+        if (!seenSoFar.contains(rightCell) && rightCell.value < 9) {
+          seenSoFar.add(rightCell);
+          nextCellsToCheck.add(rightCell);
+        }
+      }
 
-    // Search up/down
-    if (!skipDirection.has(Direction.UP) && testCell.row > 0) {
-      console.log("MOVING UP");
-      findBasin(
-        {
+      if (testCell.row > 0) {
+        const upCell = {
           col: testCell.col,
           row: testCell.row - 1,
           value: cells[testCell.row - 1][testCell.col],
-        },
-        contents,
-        new Set([Direction.DOWN])
-      ).forEach((v) => contents.add(v));
-    }
-    if (!skipDirection.has(Direction.DOWN) && testCell.col < nRow - 1) {
-      console.log("MOVING DOWN");
-      findBasin(
-        {
+        };
+        if (!seenSoFar.contains(upCell) && upCell.value < 9) {
+          seenSoFar.add(upCell);
+          nextCellsToCheck.add(upCell);
+        }
+      }
+
+      if (testCell.row < nRow - 1) {
+        const downCell = {
           col: testCell.col,
           row: testCell.row + 1,
           value: cells[testCell.row + 1][testCell.col],
-        },
-        contents,
-        new Set([Direction.UP])
-      ).forEach((v) => contents.add(v));
-    }
-    return contents;
-  };
+        };
+        if (!seenSoFar.contains(downCell) && downCell.value < 9) {
+          seenSoFar.add(downCell);
+          nextCellsToCheck.add(downCell);
+        }
+      }
+    });
+    return findBasin(nextCellsToCheck, seenSoFar);
+  }
 
   const basins: Basin[] = [];
   lowPoints.forEach((lowPoint) => {
     // check if we've already mapped a basin containing this Cell
-    if (basins.find((basin) => basin.cells.has(lowPoint)) !== undefined) {
+    if (basins.find((basin) => basin.cells.contains(lowPoint)) !== undefined) {
       return;
     }
-    const basinPoints = findBasin(lowPoint, new Set(), new Set());
+    const start = new Collections.Set<Cell>((item) => JSON.stringify(item));
+    start.add({
+      col: lowPoint.col,
+      row: lowPoint.row,
+      value: lowPoint.value,
+    });
+    const basinPoints = findBasin(start, start);
     basins.push({ cells: basinPoints });
   });
 
   return _(basins)
-    .sortBy((b) => -b.cells.size)
+    .sortBy((b) => -b.cells.size())
     .take(3)
-    .map((b) => b.cells.size)
     .value()
+    .map((b) => b.cells.size())
     .reduce((a, b) => a * b);
 };
