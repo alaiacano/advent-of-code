@@ -11,10 +11,19 @@ declare global {
     ): U;
   }
 
+  interface Map<K, V> {
+    getOrElse(k: K, v: V): V;
+  }
   interface Set<T> {
     intersection(s2: Set<T>): Set<T>;
   }
 }
+Map.prototype.getOrElse = function <K, V>(k: K, v: V): V {
+  if (this.get(k) !== undefined) {
+    return this.get(k);
+  }
+  return v;
+};
 
 Set.prototype.intersection = function <T>(s2: Set<T>) {
   let shorter: Set<T>, longer: Set<T>;
