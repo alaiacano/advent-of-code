@@ -1,10 +1,19 @@
-const opening = new Set("([{<".split(""));
+import "../../arrayExtensions";
 
+const opening = new Set("([{<".split(""));
+const closing = new Set(")]}>".split(""));
 const closingPair: { [key: string]: string } = {
   "[": "]",
   "(": ")",
   "{": "}",
   "<": ">",
+};
+
+const openingPair: { [key: string]: string } = {
+  "]": "[",
+  ")": "(",
+  "}": "{",
+  ">": "<",
 };
 
 export const checkSyntax = (line: string): string | undefined => {
@@ -49,4 +58,41 @@ export const part1 = (lines: string[]): number => {
     }
   });
   return sum;
+};
+
+export const completeLine = (line: string): string => {
+  const reversed: string = [...line].reverse().join("");
+  const stack = [];
+  let output = "";
+  for (let letter of reversed) {
+    if (closing.has(letter)) {
+      stack.push(openingPair[letter]);
+      continue;
+    }
+
+    if (stack.length === 0) {
+      output += closingPair[letter];
+    }
+    stack.pop();
+  }
+  return output;
+};
+
+function scoreLine(line: string): number {
+  const values: { [key: string]: number } = {
+    ")": 1,
+    "]": 2,
+    "}": 3,
+    ">": 4,
+  };
+  return line.split("").foldLeft((acc, letter) => 5 * acc + values[letter], 0);
+}
+export const part2 = (input: string[]): number => {
+  const incomplete = input.filter((line) => checkSyntax(line) === undefined);
+  const completedLines: number[] = incomplete
+    .map(completeLine)
+    .map(scoreLine)
+    .sort((a, b) => a - b);
+
+  return completedLines[Math.floor(completedLines.length / 2)];
 };

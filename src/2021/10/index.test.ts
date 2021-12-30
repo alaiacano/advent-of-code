@@ -1,4 +1,4 @@
-import { part1, checkSyntax } from ".";
+import { part1, checkSyntax, completeLine, part2 } from ".";
 import { lineReader } from "../../types";
 
 const demoInput: string[] = `[({(<(())[]>[[{[]{<()<>>
@@ -38,4 +38,17 @@ test("part 1 demo", () => {
 
 test("part 1", () => {
   expect(part1(inputData)).toBe(167379);
+});
+
+test("completeLine", () => {
+  expect(completeLine("[({(<(())[]>[[{[]{<()<>>")).toBe("}}]])})]");
+  expect(completeLine("[(()[<>])]({[<{<<[]>>(")).toBe(")}>]})");
+});
+
+test("part2 demo", () => {
+  expect(part2(demoInput)).toBe(288957);
+});
+
+test("part2", () => {
+  expect(part2(inputData)).toBe(2776842859);
 });
