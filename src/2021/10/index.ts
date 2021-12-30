@@ -15,13 +15,12 @@ export const checkSyntax = (line: string): string | undefined => {
       stack.push(closingPair[letter]);
       continue;
     }
-    const last = stack.pop();
-    if (last === undefined) {
+
+    if (stack.length === 0) {
       return lastSeen;
-    } else {
-      lastSeen = last;
     }
-    if (last !== letter) {
+    lastSeen = stack.pop();
+    if (lastSeen !== letter) {
       return letter;
     }
   }
