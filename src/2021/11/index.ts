@@ -43,7 +43,15 @@ function emptyCollection() {
   return new Collections.Set<Point>((item) => `${item.x},${item.y}`);
 }
 
-export const part1 = (grid: number[][], nSteps: number): number => {
+type Result = {
+  numFlashes: number;
+  numSteps: number;
+};
+export const part1 = (
+  grid: number[][],
+  nSteps: number,
+  stopOnAllFlash: boolean
+): Result => {
   let nFlashes = 0;
   let step = 0;
 
@@ -53,7 +61,6 @@ export const part1 = (grid: number[][], nSteps: number): number => {
     const alreadyFlashed = emptyCollection();
 
     // first, everyone increases by 1. Keep track of any who need to flash.
-    // console.log(`STEP ${step} INCREMENTING`);
     for (let y = 0; y < grid.length; y++) {
       for (let x = 0; x < grid[0].length; x++) {
         grid[y][x] += 1;
@@ -67,16 +74,12 @@ export const part1 = (grid: number[][], nSteps: number): number => {
     // and Collections.Set doesn't have a `filter` method, which is needed. The duplication is
     // fine though.
     const additionalRequiredFlashes: Point[] = [];
-    // console.log("PRE_FLASH");
-    // console.log(grid);
     // needsToFlash are the ones from the increment-by-1 step.
     // newRequiredFlashes are the ones that show up after subsequent flashes
     while (!needsToFlash.isEmpty()) {
-      // console.log(`STEP ${step} FLASHING ${needsToFlash.size()}`);
       needsToFlash.forEach((point) => {
         // If it already flashed, skip. Otherwise flash it.
         if (!alreadyFlashed.contains(point)) {
-          // console.log(`FLASHING ${point.x}, ${point.y}`);
           alreadyFlashed.add(point);
           nFlashes += 1;
           flash(point, grid).forEach((newPoint) =>
@@ -92,6 +95,14 @@ export const part1 = (grid: number[][], nSteps: number): number => {
         .forEach((p) => needsToFlash.add(p));
     }
 
+    // Break if all elements flashed.
+    if (
+      stopOnAllFlash === true &&
+      alreadyFlashed.size() === grid.length * grid[0].length
+    ) {
+      break;
+    }
+
     // set any over 9 back to 0
     for (let y = 0; y < grid.length; y++) {
       for (let x = 0; x < grid[0].length; x++) {
@@ -100,13 +111,10 @@ export const part1 = (grid: number[][], nSteps: number): number => {
         }
       }
     }
-    // console.log("POST");
-    // console.log(grid);
-
-    // console.log(
-    //   `END OF STEP ${step}. Need to flash ${needsToFlash.size()} next.`
-    // );
   }
-  // console.log(`>>>  Number flashed ${nFlashes}`);
-  return nFlashes;
+  return { numFlashes: nFlashes, numSteps: step };
+};
+
+export const part2 = (grid: number[][]): Result => {
+  return part1(grid, 1000, true);
 };

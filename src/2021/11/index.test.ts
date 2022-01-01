@@ -1,14 +1,12 @@
-import { part1 } from ".";
+import { part1, part2 } from ".";
 import { lineReader } from "../../types";
 function parseInput(input: string): number[][] {
   return input
     .split("\n")
     .map((line) => line.split("").map((d) => parseInt(d, 10)));
 }
-
-test("larger demo works", () => {
-  const demoInput = () =>
-    parseInput(`5483143223
+const demoInput = () =>
+  parseInput(`5483143223
 2745854711
 5264556173
 6141336146
@@ -19,6 +17,7 @@ test("larger demo works", () => {
 4846848554
 5283751526`);
 
+test("larger demo works", () => {
   const afterOne = parseInput(`6594254334
 3856965822
 6375667284
@@ -41,15 +40,24 @@ test("larger demo works", () => {
 9000000876
 8700006848`);
 
-  expect(part1(demoInput(), 10)).toStrictEqual(204);
-  expect(part1(demoInput(), 100)).toStrictEqual(1656);
+  expect(part1(demoInput(), 10, false).numFlashes).toStrictEqual(204);
+  expect(part1(demoInput(), 100, false).numFlashes).toStrictEqual(1656);
 });
 
-const inputData: number[][] = lineReader(
-  "/Users/adam/github/alaiacano/advent-of-code/inputs/2021/day11.txt",
-  (line) => line
-).map((l) => l.split("").map((ll) => parseInt(ll, 10)));
+const inputData = () =>
+  lineReader(
+    "/Users/adam/github/alaiacano/advent-of-code/inputs/2021/day11.txt",
+    (line) => line
+  ).map((l) => l.split("").map((ll) => parseInt(ll, 10)));
 
 test("part 1 works", () => {
-  expect(part1(inputData, 100)).toStrictEqual(1647);
+  expect(part1(inputData(), 100, false).numFlashes).toStrictEqual(1647);
+});
+
+test("part 2 demo works", () => {
+  expect(part2(demoInput()).numSteps).toStrictEqual(195);
+});
+
+test("part 2 works", () => {
+  expect(part2(inputData()).numSteps).toStrictEqual(348);
 });
